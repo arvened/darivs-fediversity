@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: darivs_postgres
+    environment:
+      POSTGRES_DB: darivs
+      POSTGRES_USER: darivs
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./src/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U darivs"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - darivs
+
+  postgres_test:
+    image: postgres:15-alpine
+    container_name: darivs_postgres_test
+    environment:
+      POSTGRES_DB: darivs_test
+      POSTGRES_USER: darivs
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+      - ./src/db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U darivs"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - darivs
+
+  redis:
+    image: redis:7-alpine
+    container_name: darivs_redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - redis_data:/data
+    networks:
+      - darivs
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: darivs_api
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      DATABASE_URL: postgresql://darivs:${DB_PASSWORD:-changeme}@postgres:5432/darivs
+      REDIS_URL: redis://redis:6379
+      INSTANCE_ID: ${INSTANCE_ID:-default-instance}
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-key-change-in-production}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./src:/app/src
+      - ./dist:/app/dist
+    networks:
+      - darivs
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  postgres_test_data:
+  redis_data:
+
+networks:
+  darivs:
+    driver: bridge
