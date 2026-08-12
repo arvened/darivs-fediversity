@@ -306,7 +306,126 @@ Longer explanation if needed, wrapping at 72 chars.
 - Include what changed
 - Why it changed
 - Any breaking changes
-Made
+Code Standards
+
+	•	TypeScript strict mode (no any types)
+	•	75%+ test coverage required
+	•	ESLint + Prettier formatting
+	•	Comprehensive docstrings
+	•	No hardcoded secrets
+
+📋 Compliance
+
+GDPR
+
+	•	Data subject access requests (30-day response)
+	•	Right to portability (automatic export)
+	•	Right to deletion (with audit trail)
+	•	Data processing agreements
+
+Multi-Jurisdiction
+
+Supported: Ukraine (UA), European Union (EU), United Kingdom (UK), Poland (PL), Germany (DE), Switzerland (CH)
+
+Each jurisdiction has:
+
+	•	Custom T&Cs
+	•	Tax reporting rules
+	•	Geo-blocking configuration
+	•	Age restrictions
+
+🔐 Security
+
+Reporting Vulnerabilities
+
+DO NOT open public issues for security vulnerabilities.
+
+Email: security@arvend.io
+
+Please include:
+
+	•	Description of vulnerability
+	•	Steps to reproduce
+	•	Potential impact
+	•	Suggested fix (optional)
+
+Security Measures
+
+	•	All connections over HTTPS (TLS 1.3)
+	•	JWT tokens with expiration
+	•	SQL injection prevention (prepared statements)
+	•	XSS protection (content security policy)
+	•	Rate limiting (100 req/min per IP)
+	•	CORS properly configured
+
+Audit Frequency
+
+	•	Monthly: Dependency security checks
+	•	Quarterly: Internal code review
+	•	Annually: Independent security audit
+
+📜 License
+
+MIT License - See LICENSE file for details
+
+Permissions:
+
+	•	✅ Commercial use
+	•	✅ Modification
+	•	✅ Distribution
+	•	✅ Private use
+
+Conditions:
+
+	•	Include license copy
+	•	Include copyright notice
+	•	Document changes
+
+Limitations:
+
+	•	No liability
+	•	No warranty
+
+👥 Team
+
+Eduard Arbitman (Founder, Technical Lead)
+
+	•	35+ years entrepreneurship experience
+	•	Full-stack development
+	•	Email: hello@arvend.io
+
+Yaroslav Oseledko (Lead Engineer, Backend)
+
+	•	14+ years backend development
+	•	FastAPI, PostgreSQL, Docker expertise
+	•	GitHub: @comradeos
+
+🙏 Acknowledgments
+
+	•	NLnet Foundation - Sponsorship
+	•	Horizon Europe - NGI Fediversity program
+	•	Open source community
+
+📞 Support
+
+	•	Documentation: docs/
+	•	Issues: GitHub Issues
+	•	Discussions: GitHub Discussions
+	•	Email: hello@arvend.io
+
+🎯 Roadmap
+
+	•	Week 1-2: Infrastructure setup
+	•	Week 3-4: Federation protocol
+	•	Week 5-7: Backend services
+	•	Week 8-10: Frontend
+	•	Week 11-13: Compliance
+	•	Week 14-15: Security audit
+	•	Week 16: Deployment
+
+See DEVELOPMENT.md for detailed timeline
+
+Status: Week 1 Complete | Week 3 In Progress | 12 Weeks to Production
 
 
 
