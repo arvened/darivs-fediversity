@@ -1,8 +1,28 @@
-Нужно добавить в README.md этот текст:
+
 
 ═══════════════════════════════════════════════════
 
 # DARIVS Fediversity — Self-Hosted Charitable Platform
+> ⚠️ **Project Status: Pre-Grant Proof of Concept**
+> 
+> This repository currently contains an early-stage architectural prototype developed to demonstrate technical feasibility and team capability while our NGI Fediversity grant application (2026-08-0d7) is under eligibility review.
+>
+> **Important**: The current implementation is a foundational skeleton only. Substantial rework is expected once the grant is confirmed, including:
+> - Production-grade cryptography (current signing is simplified for prototyping)
+> - Independent security audit and hardening (Weeks 14-15)
+> - Full GDPR and multi-jurisdiction legal compliance review
+> - Production database migrations and data integrity testing
+> - Comprehensive integration and load testing across real federated instances
+> - UI/UX development (Weeks 8-10, not yet started)
+>
+> The grant funding (€40,000) is allocated to the engineering time, independent security audit (€8,000), infrastructure, and compliance work required to take this prototype to a production-ready, community-adopted standard — work that cannot be completed as volunteer effort within a reasonable timeframe.
+>
+> See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for the full 16-week roadmap.
+
+---
+
+
+
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
