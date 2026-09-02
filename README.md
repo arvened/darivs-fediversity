@@ -30,9 +30,9 @@
 
 DARIVS is a self-hosted, decentralized charitable 
 prediction platform with service portability at its core.
-
+Funding (pending): NGI Fediversity (€40,000, application under eligibility review)
 **Status:** Week 1/16 Complete ✅  
-**Funding:** NGI Fediversity (€40,000)  
+
 **Build Time:** 16 weeks  
 **Start Date:** May 12, 2026  
 
@@ -62,6 +62,15 @@ participating in a federated charitable ecosystem.
 ✅ 85% charitable allocation (irrevocable)
 ✅ Multi-jurisdiction compliance (6 regions)
 ✅ Open source (MIT license)
+## 🔍 Чем отличается от существующих федеративных решений
+
+| Решение | Что покрывает | Чего не хватает для DARIVS |
+|---|---|---|
+| ActivityPub (Mastodon и др.) | Федеративный протокол для соцсетей | Не специализирован под charity/donation flows, нет модели immutable audit trail для транзакций |
+| Solid Project | Data ownership и децентрализация данных | Общая инфраструктура data pods, не заточена под donation allocation и charitable prediction |
+| Централизованные charity-платформы (GoFundMe и т.п.) | Donation processing | Vendor lock-in, нет service portability, NGO не владеет инфраструктурой |
+
+DARIVS применяет принципы федерации (portability, self-hosting) конкретно к charitable-домену: SHA-256 immutable audit trail для donation flows, irrevocable 85% allocation, и миграция пользователей между инстансами без потери истории — комбинация, отсутствующая в существующих fediverse- или charity-специфичных решениях.
 
 ## Quick Start
 
