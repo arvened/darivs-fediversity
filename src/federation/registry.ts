@@ -1,4 +1,4 @@
-import { FederationInstance, DataPackage } from './protocol';
+import { FederationInstance } from './protocol';
 
 export interface RegistryEntry {
   id: string;
@@ -76,7 +76,7 @@ export class InstanceRegistry {
     try {
       const response = await fetch(`${url}/health`, {
         method: 'GET',
-        timeout: 5000,
+        signal: AbortSignal.timeout(5000),
       });
 
       const latency = Date.now() - startTime;
@@ -87,7 +87,7 @@ export class InstanceRegistry {
         statusCode: response.status,
         timestamp: new Date(),
       };
-    } catch (error) {
+    } catch {
       const latency = Date.now() - startTime;
 
       return {
@@ -110,7 +110,7 @@ export class InstanceRegistry {
 
     if (health.healthy) {
       entry.status = 'active';
-      entry.healthScore = Math.max(entry.healthScore - 5, 100); // Improve score
+      entry.healthScore = Math.min(entry.healthScore + 5, 100); // Improve score
     } else {
       entry.healthScore = Math.max(entry.healthScore - 20, 0); // Degrade score
 
@@ -192,7 +192,7 @@ export class InstanceRegistry {
   /**
    * Periodically health-check all instances
    */
-  startHealthChecks(): NodeJS.Timer {
+  startHealthChecks(): ReturnType<typeof setInterval> {
     return setInterval(async () => {
       for (const instanceId of this.instances.keys()) {
         await this.updateInstanceHealth(instanceId);
@@ -203,7 +203,7 @@ export class InstanceRegistry {
   /**
    * Stop periodic health checks
    */
-  stopHealthChecks(timer: NodeJS.Timer): void {
+  stopHealthChecks(timer: ReturnType<typeof setInterval>): void {
     clearInterval(timer);
   }
 

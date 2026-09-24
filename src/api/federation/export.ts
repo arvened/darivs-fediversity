@@ -1,5 +1,4 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { DataPackage } from '../../federation/protocol';
 import FederationProtocol from '../../federation/protocol';
 import { getDb } from '../../app';
 
@@ -15,7 +14,7 @@ export async function registerExportRoutes(app: FastifyInstance): Promise<void> 
    * Export all user data (GDPR compliance)
    * Requires authentication
    */
-  app.get<{ Reply: DataPackage }>(
+  app.get(
     '/federation/export/users',
     {
       onRequest: [app.authenticate],
@@ -30,7 +29,7 @@ export async function registerExportRoutes(app: FastifyInstance): Promise<void> 
         },
       },
     },
-    async (request: FastifyRequest, reply: FastifyReply) => {
+    async (_request: FastifyRequest, reply: FastifyReply) => {
       try {
         const instanceId = process.env.INSTANCE_ID || 'default-instance';
         const protocol = new FederationProtocol(
@@ -91,7 +90,7 @@ export async function registerExportRoutes(app: FastifyInstance): Promise<void> 
 
         reply.code(200).send(pkg);
       } catch (error) {
-        app.log.error('Export failed:', error);
+        app.log.error({ err: error }, 'Export failed');
         reply.code(500).send({
           success: false,
           error: 'Export failed',
@@ -114,7 +113,7 @@ export async function registerExportRoutes(app: FastifyInstance): Promise<void> 
         tags: ['federation'],
       },
     },
-    async (request: FastifyRequest, reply: FastifyReply) => {
+    async (_request: FastifyRequest, reply: FastifyReply) => {
       try {
         // Fetch audit log
         const auditResult = await db.query(
@@ -135,7 +134,7 @@ export async function registerExportRoutes(app: FastifyInstance): Promise<void> 
           totalRecords: auditLog.length,
         });
       } catch (error) {
-        app.log.error('Transaction export failed:', error);
+        app.log.error({ err: error }, 'Transaction export failed');
         reply.code(500).send({
           success: false,
           error: 'Transaction export failed',
@@ -157,7 +156,7 @@ export async function registerExportRoutes(app: FastifyInstance): Promise<void> 
         tags: ['federation'],
       },
     },
-    async (request: FastifyRequest, reply: FastifyReply) => {
+    async (_request: FastifyRequest, reply: FastifyReply) => {
       try {
         const usersResult = await db.query('SELECT COUNT(*) FROM users');
         const transactionsResult = await db.query(
@@ -182,7 +181,7 @@ export async function registerExportRoutes(app: FastifyInstance): Promise<void> 
           },
         });
       } catch (error) {
-        app.log.error('Metadata export failed:', error);
+        app.log.error({ err: error }, 'Metadata export failed');
         reply.code(500).send({
           success: false,
           error: 'Metadata export failed',

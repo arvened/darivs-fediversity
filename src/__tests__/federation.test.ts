@@ -1,4 +1,4 @@
-import FederationProtocol, { DataPackage } from '../federation/protocol';
+import FederationProtocol from '../federation/protocol';
 import InstanceRegistry from '../federation/registry';
 
 describe('Federation Protocol', () => {
@@ -106,7 +106,7 @@ describe('Federation Protocol', () => {
       const validation = protocol.validatePackage(invalidPkg, testPublicKey);
 
       expect(validation.valid).toBe(false);
-      expect(validation.errors).toContain(expect.stringContaining('Unsupported version'));
+      expect(validation.errors).toContainEqual(expect.stringContaining('Unsupported version'));
     });
 
     test('should reject package with corrupted checksum', () => {
@@ -118,7 +118,7 @@ describe('Federation Protocol', () => {
       const validation = protocol.validatePackage(invalidPkg, testPublicKey);
 
       expect(validation.valid).toBe(false);
-      expect(validation.errors).toContain(expect.stringContaining('Checksum mismatch'));
+      expect(validation.errors).toContainEqual(expect.stringContaining('Checksum mismatch'));
     });
   });
 
@@ -135,7 +135,7 @@ describe('Federation Protocol', () => {
 
       const conflicts = protocol.detectConflicts(localUsers as any, remoteUsers as any);
 
-      expect(conflicts).toContain(expect.stringContaining('2'));
+      expect(conflicts).toContainEqual(expect.stringContaining('2'));
       expect(conflicts).toHaveLength(1);
     });
 
@@ -330,4 +330,3 @@ describe('Instance Registry', () => {
     });
   });
 });
-          

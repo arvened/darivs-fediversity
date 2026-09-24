@@ -38,15 +38,22 @@ export interface ImportResult {
   error?: string;
 }
 
-// Federation Protocol Implementation
+/**
+ * Federation Protocol (prototype)
+ *
+ * PROTOTYPE LIMITATION: the "signature" produced here is a SHA-256 integrity
+ * tag computed over the checksum, the instance ID and the instance's PUBLIC
+ * key. It detects accidental corruption but is NOT a cryptographic signature:
+ * anyone who knows the public key can produce a valid tag. Replacing it with
+ * real asymmetric signatures (e.g. Ed25519) is planned grant-funded work.
+ * The private key is accepted for API compatibility but is not used yet.
+ */
 export class FederationProtocol {
   private instanceId: string;
-  private privateKey: string;
   private publicKey: string;
 
-  constructor(instanceId: string, privateKey: string, publicKey: string) {
+  constructor(instanceId: string, _privateKey: string, publicKey: string) {
     this.instanceId = instanceId;
-    this.privateKey = privateKey;
     this.publicKey = publicKey;
   }
 
@@ -59,21 +66,32 @@ export class FederationProtocol {
   }
 
   /**
-   * Sign data package with private key (RSA)
-   * For now using simple hash-based signature
+   * Compute the prototype integrity tag (see class comment).
    */
-  signPackage(data: Record<string, unknown>, checksum: string): string {
-    const toSign = `${checksum}${this.instanceId}${this.privateKey}`;
-    return crypto.createHash('sha256').update(toSign).digest('hex');
+  private computeTag(checksum: string, instanceId: string, publicKey: string): string {
+    return crypto
+      .createHash('sha256')
+      .update(`${checksum}${instanceId}${publicKey}`)
+      .digest('hex');
   }
 
   /**
-   * Verify package signature
+   * "Sign" a data package (prototype integrity tag, see class comment).
    */
-  verifySignature(checksum: string, signature: string, remoteInstanceId: string): boolean {
-    const toVerify = `${checksum}${remoteInstanceId}${this.publicKey}`;
-    const expectedSig = crypto.createHash('sha256').update(toVerify).digest('hex');
-    return signature === expectedSig;
+  signPackage(_data: Record<string, unknown>, checksum: string): string {
+    return this.computeTag(checksum, this.instanceId, this.publicKey);
+  }
+
+  /**
+   * Verify a package tag against the remote instance's public key.
+   */
+  verifySignature(
+    checksum: string,
+    signature: string,
+    remoteInstanceId: string,
+    remotePublicKey: string
+  ): boolean {
+    return signature === this.computeTag(checksum, remoteInstanceId, remotePublicKey);
   }
 
   /**
@@ -110,7 +128,10 @@ export class FederationProtocol {
   /**
    * Validate incoming data package
    */
-  validatePackage(pkg: DataPackage, remotePublicKey: string): {
+  validatePackage(
+    pkg: DataPackage,
+    remotePublicKey: string
+  ): {
     valid: boolean;
     errors: string[];
   } {
@@ -127,11 +148,12 @@ export class FederationProtocol {
       errors.push('Checksum mismatch - data may be corrupted');
     }
 
-    // Verify signature
+    // Verify integrity tag
     const signatureValid = this.verifySignature(
       pkg.checksum,
       pkg.signature,
-      pkg.instanceId
+      pkg.instanceId,
+      remotePublicKey
     );
     if (!signatureValid) {
       errors.push('Signature verification failed');
@@ -151,11 +173,11 @@ export class FederationProtocol {
     remoteUsers: Record<string, unknown>[]
   ): string[] {
     const conflicts: string[] = [];
-    const localIds = new Set(localUsers.map((u: any) => u.id));
+    const localIds = new Set(localUsers.map((u) => u.id));
 
     for (const remoteUser of remoteUsers) {
-      if (localIds.has((remoteUser as any).id)) {
-        conflicts.push(`User conflict: ${(remoteUser as any).id}`);
+      if (localIds.has(remoteUser.id)) {
+        conflicts.push(`User conflict: ${String(remoteUser.id)}`);
       }
     }
 

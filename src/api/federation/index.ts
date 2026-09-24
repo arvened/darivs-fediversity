@@ -26,7 +26,7 @@ export async function registerFederationRoutes(app: FastifyInstance): Promise<vo
         tags: ['federation'],
       },
     },
-    async (request, reply) => {
+    async () => {
       return {
         status: 'ok',
         instance: process.env.INSTANCE_ID || 'default-instance',
@@ -49,7 +49,7 @@ export async function registerFederationRoutes(app: FastifyInstance): Promise<vo
         tags: ['federation'],
       },
     },
-    async (request, reply) => {
+    async () => {
       // This would be populated from registry in production
       return {
         success: true,

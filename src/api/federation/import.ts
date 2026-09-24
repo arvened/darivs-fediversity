@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
+﻿import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 import { DataPackage } from '../../federation/protocol';
 import FederationProtocol from '../../federation/protocol';
 import { getDb } from '../../app';
@@ -116,7 +116,7 @@ export async function registerImportRoutes(app: FastifyInstance): Promise<void> 
               );
               usersImported++;
             } catch (err) {
-              app.log.warn(`Failed to import user ${u.id}:`, err);
+              app.log.warn({ err }, `Failed to import user ${u.id}`);
             }
           }
 
@@ -133,7 +133,7 @@ export async function registerImportRoutes(app: FastifyInstance): Promise<void> 
               );
               charitiesImported++;
             } catch (err) {
-              app.log.warn(`Failed to import charity ${c.id}:`, err);
+              app.log.warn({ err }, `Failed to import charity ${c.id}`);
             }
           }
 
@@ -165,7 +165,7 @@ export async function registerImportRoutes(app: FastifyInstance): Promise<void> 
                 transactionsImported++;
               }
             } catch (err) {
-              app.log.warn(`Failed to import transaction ${t.id}:`, err);
+              app.log.warn({ err }, `Failed to import transaction ${t.id}`);
             }
           }
 
@@ -195,7 +195,7 @@ export async function registerImportRoutes(app: FastifyInstance): Promise<void> 
           client.release();
         }
       } catch (error) {
-        app.log.error('Import failed:', error);
+        app.log.error({ err: error }, 'Import failed');
         reply.code(500).send({
           success: false,
           error: 'Import failed',
@@ -208,7 +208,7 @@ export async function registerImportRoutes(app: FastifyInstance): Promise<void> 
    * GET /federation/import/status/:importId
    * Check status of import operation
    */
-  app.get(
+  app.get<{ Params: { importId: string } }>(
     '/federation/import/status/:importId',
     {
       onRequest: [app.authenticate],
@@ -244,7 +244,7 @@ export async function registerImportRoutes(app: FastifyInstance): Promise<void> 
           import: result.rows[0],
         });
       } catch (error) {
-        app.log.error('Status check failed:', error);
+        app.log.error({ err: error }, 'Status check failed');
         reply.code(500).send({
           success: false,
           error: 'Status check failed',

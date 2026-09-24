@@ -1,80 +1,79 @@
+# DARIVS Fediversity
 
-
-═══════════════════════════════════════════════════
-
-# DARIVS Fediversity — Self-Hosted Charitable Platform
-> ⚠️ **Project Status: Pre-Grant Proof of Concept**
-> 
-> This repository currently contains an early-stage architectural prototype developed to demonstrate technical feasibility and team capability while our NGI Fediversity grant application (2026-08-0d7) is under eligibility review.
->
-> **Important**: The current implementation is a foundational skeleton only. Substantial rework is expected once the grant is confirmed, including:
-> - Production-grade cryptography (current signing is simplified for prototyping)
-> - Independent security audit and hardening (Weeks 14-15)
-> - Full GDPR and multi-jurisdiction legal compliance review
-> - Production database migrations and data integrity testing
-> - Comprehensive integration and load testing across real federated instances
-> - UI/UX development (Weeks 8-10, not yet started)
->
-> The grant funding (€40,000) is allocated to the engineering time, independent security audit (€8,000), infrastructure, and compliance work required to take this prototype to a production-ready, community-adopted standard — work that cannot be completed as volunteer effort within a reasonable timeframe.
->
-> See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for the full 16-week roadmap.
-
----
-
-
-
+> ⚠️ **Project status: pre-grant proof of concept.**
+> This repository contains an early architectural prototype. It was written to demonstrate
+> technical feasibility while our NGI Fediversity grant application (2026-08-0d7) is under
+> eligibility review. **No grant has been awarded.** Development is intentionally paused
+> until the review is decided. Nothing here is production-ready, published, or deployed.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## Overview
+## What this project is
 
-DARIVS is a self-hosted, decentralized charitable 
-prediction platform with service portability at its core.
-Funding (pending): NGI Fediversity (€40,000, application under eligibility review)
-**Status:** Week 1/16 Complete ✅  
+DARIVS Fediversity is a planned self-hosted platform for charitable prediction challenges,
+built around **service portability**: an organisation should be able to run its own instance,
+own its data, and move users and records to another instance without losing history.
 
-**Build Time:** 16 weeks  
-**Start Date:** May 12, 2026  
+## What exists today
 
-## Problem
+- A Fastify + TypeScript application skeleton (`src/app.ts`) with health, version and info endpoints
+- A prototype federation protocol (`src/federation/protocol.ts`): data package format,
+  SHA-256 checksums, package validation and user-conflict detection
+- A prototype instance registry (`src/federation/registry.ts`)
+- Draft export/import HTTP routes (`src/api/federation/`) — untested against a real database
+- A draft PostgreSQL schema (`src/db/schema.sql`) and domain types
+- Unit tests (Jest) for the federation protocol, the registry and the basic HTTP endpoints,
+  run in CI on every push
 
-Centralized charity platforms create vendor lock-in 
-and data silos. NGOs cannot:
-- Control their donation infrastructure
-- Own their user data
-- Migrate to other platforms
-- Participate in decentralized networks
+## Known limitations (to be addressed in the funded work)
 
-## Solution
+- **No real cryptographic signatures yet.** Packages carry a SHA-256 integrity tag, not an
+  asymmetric signature; anyone who knows an instance's public key can forge it.
+  Ed25519 signatures are planned.
+- Export/import routes and the database schema have no integration tests yet.
+- `Dockerfile` / `docker-compose.yml` are included but not yet verified.
+- No UI, no multi-instance test environment, no security audit, no legal/GDPR review yet.
 
-DARIVS enables **service portability** so any 
-foundation can self-host independently while 
-participating in a federated charitable ecosystem.
+## Running the prototype locally
 
-**Users can migrate without losing history.**
-
-## Features
-
-✅ Self-hosted by design (not SaaS)
-✅ Service portability (federation protocol)
-✅ Data decoupling (users ≠ charities ≠ payments)
-✅ Immutable audit trail (SHA-256 hash chain)
-✅ 85% charitable allocation (irrevocable)
-✅ Multi-jurisdiction compliance (6 regions)
-✅ Open source (MIT license)
-## 🔍 Чем отличается от существующих федеративных решений
-
-| Решение | Что покрывает | Чего не хватает для DARIVS |
-|---|---|---|
-| ActivityPub (Mastodon и др.) | Федеративный протокол для соцсетей | Не специализирован под charity/donation flows, нет модели immutable audit trail для транзакций |
-| Solid Project | Data ownership и децентрализация данных | Общая инфраструктура data pods, не заточена под donation allocation и charitable prediction |
-| Централизованные charity-платформы (GoFundMe и т.п.) | Donation processing | Vendor lock-in, нет service portability, NGO не владеет инфраструктурой |
-
-DARIVS применяет принципы федерации (portability, self-hosting) конкретно к charitable-домену: SHA-256 immutable audit trail для donation flows, irrevocable 85% allocation, и миграция пользователей между инстансами без потери истории — комбинация, отсутствующая в существующих fediverse- или charity-специфичных решениях.
-
-## Quick Start
+Requires Node.js 20 or newer.
 
 ```bash
 git clone https://github.com/arvened/darivs-fediversity.git
 cd darivs-fediversity
-docker-compose up -d
+npm install
+npm test          # unit tests with coverage report
+npm run build     # type-check and compile to dist/
+```
+
+The unit tests do not need a database.
+
+## Repository layout
+
+```
+src/
+  app.ts                  Fastify application
+  api/federation/         Draft export/import routes
+  federation/             Federation protocol and instance registry (prototype)
+  db/                     Draft schema and domain types
+  __tests__/              Jest tests
+docs/DEVELOPMENT.md       Planned work plan
+```
+
+## Roadmap
+
+The planned grant-funded work (production cryptography, integration tests, multi-instance
+federation, UI, independent security audit, compliance review) is described in
+[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md). None of it has started.
+
+## Team
+
+See [CONTRIBUTORS.md](CONTRIBUTORS.md).
+
+## License
+
+MIT — see [LICENSE](LICENSE).
+
+## Contact
+
+hello@arvend.io
